@@ -1,0 +1,9 @@
+{
+  "baseDir": "build", 
+  "targetHost":"",
+  "targetPort": "22",
+  "username": "root",
+  "password": "", 
+  "targetDir": "/var/www/html", 
+  "clearBeforePublish": true
+}
