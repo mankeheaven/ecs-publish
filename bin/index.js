@@ -10,7 +10,6 @@ const program = new Command();
 //命令行 ecs-publish
 
 function getEcsOptions() {
-  ///region/endpoint, accessKeyId, accessKeySecret, bucket
   program.option("-c, --config", "config file path");
 
   program.parse(process.argv);
