@@ -1,6 +1,6 @@
 {
   "name": "@mankeheaven/ecs-publish",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "publish static resources to ecs",
   "bin": {
     "ecs-publish": "./bin/index.js"
@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/mankeheaven/ecs-publish.git"
   },
-  "author": "",
+  "author": "mankeheaven",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/mankeheaven/ecs-publish/issues"
