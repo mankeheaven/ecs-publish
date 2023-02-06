@@ -23,9 +23,13 @@ npm install @mankeheaven/ecs-publish --save-dev
 ```
 或者配置文件改名字，xxx.json
 
-编写scripts脚本,如果你的配置名称就是ecs-publish.json，可以省略--config
+编写scripts脚本,如果你的配置名称就是ecs-publish.json，可以省略--config, 可以省略privateKey参数，它会从ecs-publish.json中找，优先级从命令行和env上拿的更高
+
 ```
-ecs-publish --config xxx.json
+ecs-publish --config xxx.json --privateKey 路径
 ```
 
+"privateKey" : "~/.ssh/id_rsa", 可以换成其他路径
+
+3. 脚本发布，参考ecs.js
 

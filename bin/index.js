@@ -3,6 +3,7 @@ import ecsPublish from "../lib/index.js";
 import fs from "fs-extra";
 import path from "path";
 import { Command } from "commander/esm.mjs";
+import untildify from "untildify";
 
 const program = new Command();
 
@@ -11,6 +12,7 @@ const program = new Command();
 
 function getEcsOptions() {
   program.option("-c, --config", "config file path");
+  program.option("-pk, --privateKey", "privateKey path");
 
   program.parse(process.argv);
 
@@ -39,19 +41,33 @@ function getEcsOptions() {
   }
   //找到了文件，读取
   let configJson = fs.readJsonSync(configPath);
+
+  //先用默认的configJson中的privateKey
+  if(!!configJson.privateKey){
+    const privatekeyPath = untildify(configJson.privateKey)
+    if (!fs.existsSync(privatekeyPath)) {
+      console.error("\x1b[31m", "can not find privateKey file", "\x1b[m");
+      process.exit(1);
+    }
+    configJson.privateKey = fs.readFileSync(privatekeyPath)
+  }
+
+  //由命令行决定的privateKey优先级更高
+  //如果有options.privateKey, 用它，否则默认用
+  if(!!options.privateKey || !!process.env?.privateKey){
+    const privatekeyPath = untildify(options.privateKey)
+    if (!fs.existsSync(privatekeyPath)) {
+      console.error("\x1b[31m", "[c|e] can not find privateKey file", "\x1b[m");
+      process.exit(1);
+    }
+    configJson.privateKey = fs.readFileSync(privatekeyPath)
+  }
+
   configJson = checkConfigJson(configJson);
   return configJson;
 }
 
 function checkConfigJson(configJson) {
-  if (!configJson.type) {
-    configJson.type = "ali";
-  }
-
-  if (!configJson.targetDir) {
-    console.error("\x1b[31m", "can not find targetDir param", "\x1b[m");
-    process.exit(1);
-  }
 
   if (!configJson.targetHost) {
     console.error("\x1b[31m", "can not find targetHost param", "\x1b[m");
@@ -62,8 +78,24 @@ function checkConfigJson(configJson) {
     console.error("\x1b[31m", "can not find targetPort param", "\x1b[m");
     process.exit(1);
   }
+
+  if (!configJson.targetDir) {
+    console.error("\x1b[31m", "can not find targetDir param", "\x1b[m");
+    process.exit(1);
+  }
+
   if (!fs.existsSync(configJson.baseDir)) {
     console.error("\x1b[31m", "baseDir is not exist", "\x1b[m");
+    process.exit(1);
+  }
+
+  if (!configJson.username) {
+    console.error("\x1b[31m", "username is not exist", "\x1b[m");
+    process.exit(1);
+  }
+
+  if (!configJson.password && !configJson.privateKey) {
+    console.error("\x1b[31m", "password or privateKey is not exist", "\x1b[m");
     process.exit(1);
   }
 
