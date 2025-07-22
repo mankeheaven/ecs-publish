@@ -11,8 +11,8 @@ const program = new Command();
 //命令行 ecs-publish
 
 function getEcsOptions() {
-  program.option("-c, --config", "config file path");
-  program.option("-pk, --privateKey", "privateKey path");
+  program.option("-c, --config <string>", "config file path");
+  program.option("-pk, --privateKey <string>", "privateKey path");
 
   program.parse(process.argv);
 
